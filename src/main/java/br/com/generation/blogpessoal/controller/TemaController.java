@@ -1,6 +1,7 @@
 package br.com.generation.blogpessoal.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.com.generation.blogpessoal.model.Tema;
 import br.com.generation.blogpessoal.repository.TemaRepository;
@@ -44,17 +46,36 @@ public class TemaController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Tema> postTema(@RequestBody Tema tema) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(temaRepository.save(tema));
+	public ResponseEntity<Tema> postTema(@RequestBody Tema tema){
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(temaRepository.save(tema));
+	}
+
+	@PutMapping
+	public ResponseEntity<Tema> putTema(@RequestBody Tema tema){
+		
+		Optional<Tema> temaUpdate = temaRepository.findById(tema.getId());
+		
+		if (temaUpdate.isPresent()) {
+			return ResponseEntity.status(HttpStatus.OK).body(temaRepository.save(tema));
+		}else{
+			throw new ResponseStatusException(
+		          	HttpStatus.NOT_FOUND, "Tema não encontrado!", null);
+		}
+			
 	}
 	
-	@PutMapping
-	public ResponseEntity<Tema> putTema(@RequestBody Tema tema) {
-		return ResponseEntity.status(HttpStatus.OK).body(temaRepository.save(tema));
-	}
 	@DeleteMapping("/{id}")
 	public void deleteTema(@PathVariable long id) {
-		temaRepository.deleteById(id);
+
+		Optional<Tema> tema = temaRepository.findById(id);
+		
+		if (tema.isPresent()) {
+			temaRepository.deleteById(id);
+		}else{
+			throw new ResponseStatusException(
+		          	HttpStatus.NOT_FOUND, "Tema não encontrado!", null);
+		}
 	}
 
 }
