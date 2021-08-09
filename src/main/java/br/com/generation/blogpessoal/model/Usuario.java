@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -32,6 +33,7 @@ public class Usuario {
 	
 	@NotNull
 	@Size(min = 2, max = 100)
+	@Email
 	private String usuario;
 	
 	@NotNull
@@ -45,6 +47,20 @@ public class Usuario {
 	@OneToMany (mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("usuario")
 	private List <PostagemModel> postagem;
+	
+
+	public Usuario(long id, @NotNull @Size(min = 2, max = 100) String nome,
+			@NotNull @Size(min = 2, max = 100) @Email String usuario, @NotNull @Size(min = 5) String senha,
+			LocalDate dataNascimento) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.usuario = usuario;
+		this.senha = senha;
+		this.dataNascimento = dataNascimento;
+	}
+	
+	public Usuario() {	}
 
 	public long getId() {
 		return id;
