@@ -43,6 +43,22 @@ public class PostagemModel {
 	@JsonIgnoreProperties ("postagem")
 	private Usuario usuario;
 
+	public Tema getTema() {
+		return tema;
+	}
+
+	public void setTema(Tema tema) {
+		this.tema = tema;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
 	public long getId() {
 		return id;
 	}
