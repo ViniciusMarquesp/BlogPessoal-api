@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.generation.blogpessoal.model.PostagemModel;
+import br.com.generation.blogpessoal.model.Postagem;
 import br.com.generation.blogpessoal.repository.PostagemRepository;
 
 
@@ -29,15 +29,15 @@ public class PostagemController {
 	private PostagemRepository repository;
 	
 	@GetMapping
-	public ResponseEntity<List<PostagemModel>> GetAll(){
+	public ResponseEntity<List<Postagem>> GetAll(){
 		return ResponseEntity.ok(repository.findAll());
 		
 		
 	}
 	@GetMapping("idifelse/{id}")
-	public ResponseEntity<PostagemModel> getByIdIfElse(@PathVariable long id) {
+	public ResponseEntity<Postagem> getByIdIfElse(@PathVariable long id) {
 
-		Optional<PostagemModel> postagem = repository.findById(id);
+		Optional<Postagem> postagem = repository.findById(id);
 		if (postagem.isPresent()) {
 			return ResponseEntity.ok(postagem.get());
 		}
@@ -45,9 +45,9 @@ public class PostagemController {
 	}
 
 	@GetMapping("/idtrycatch/{id}")
-	public ResponseEntity<PostagemModel> getByIdTryCatch(@PathVariable long id) {
+	public ResponseEntity<Postagem> getByIdTryCatch(@PathVariable long id) {
 
-		Optional<PostagemModel> postagem = repository.findById(id);
+		Optional<Postagem> postagem = repository.findById(id);
 		try {
 			return ResponseEntity.ok(postagem.get());
 		} catch (Exception e) {
@@ -56,21 +56,21 @@ public class PostagemController {
 
 	}
 	@GetMapping("/{id}")
-	public ResponseEntity<PostagemModel> getById(@PathVariable long id) {
+	public ResponseEntity<Postagem> getById(@PathVariable long id) {
 		return repository.findById(id)
 			.map(resp -> ResponseEntity.ok(resp))
 			.orElse(ResponseEntity.notFound().build());
 	}
 	@GetMapping("/titulo/{titulo}")
-	public ResponseEntity<List<PostagemModel>> getByTitulo(@PathVariable String titulo){
+	public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo){
 		return ResponseEntity.ok(repository.findAllByTituloContainingIgnoreCase(titulo));
 	}
 	@PostMapping
-	public ResponseEntity<PostagemModel> postPostagem (@RequestBody PostagemModel postagem){
+	public ResponseEntity<Postagem> postPostagem (@RequestBody Postagem postagem){
 		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(postagem));
 	}
 	@PutMapping
-	public ResponseEntity<PostagemModel> putPostagem (@RequestBody PostagemModel postagem){
+	public ResponseEntity<Postagem> putPostagem (@RequestBody Postagem postagem){
 		return ResponseEntity.status(HttpStatus.OK).body(repository.save(postagem));
 	}
 	@DeleteMapping("/{id}")
